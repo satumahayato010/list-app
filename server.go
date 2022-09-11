@@ -60,6 +60,8 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/view", viewHandler)
 	http.HandleFunc("/view/create", createHandler)
+	// 追加
+	http.Handle("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./static/"))))
 	fmt.Println("Server Start Up........")
 	log.Fatal(http.ListenAndServe("localhost:8080", nil))
 }
