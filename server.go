@@ -43,8 +43,23 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func createHandler(w http.ResponseWriter, r *http.Request) {
+	formValue := r.FormValue("value")
+	file, err := os.OpenFile("reading.txt", os.O_WRONLY|os.O_APPEND|os.O_CREATE, os.FileMode(0600))
+	defer file.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = fmt.Fprintln(file, formValue)
+	if err != nil {
+		log.Fatal(err)
+	}
+	http.Redirect(w, r, "/view", http.StatusFound)
+}
+
 func main() {
 	http.HandleFunc("/view", viewHandler)
+	http.HandleFunc("/view/create", createHandler)
 	fmt.Println("Server Start Up........")
 	log.Fatal(http.ListenAndServe("localhost:8080", nil))
 }
